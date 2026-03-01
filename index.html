@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Mixed By Lungsta | Professional Mixing & Mastering</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,600;1,300&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --red: #e8000d;
+    --red-dim: #9c0009;
+    --red-glow: rgba(232,0,13,0.35);
+    --black: #080808;
+    --dark: #111111;
+    --panel: #161616;
+    --border: #2a2a2a;
+    --white: #f0ede8;
+    --grey: #888;
+    --mono: 'Share Tech Mono', monospace;
+    --display: 'Bebas Neue', sans-serif;
+    --body: 'Barlow', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: var(--body);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed; top: 0; left: 0;
+    width: 12px; height: 12px;
+    background: var(--red);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.08s, width 0.2s, height 0.2s, background 0.2s;
+    mix-blend-mode: normal;
+  }
+  .cursor-ring {
+    position: fixed; top: 0; left: 0;
+    width: 36px; height: 36px;
+    border: 1px solid var(--red);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.18s ease, width 0.2s, height 0.2s, opacity 0.2s;
+    opacity: 0.5;
+  }
+  body:has(a:hover) .cursor { width: 20px; height: 20px; background: var(--red); }
+  body:has(a:hover) .cursor-ring { width: 50px; height: 50px; opacity: 0.3; }
+
+  /* Noise texture overlay */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.028;
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--black); }
+  ::-webkit-scrollbar-thumb { background: var(--red); }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 900;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 4rem;
+    background: linear-gradient(to bottom, rgba(8,8,8,0.98), transparent);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s, background 0.3s;
+  }
+  nav.scrolled {
+    background: rgba(8,8,8,0.97);
+    border-color: var(--border);
+  }
+  .nav-logo {
+    font-family: var(--display);
+    font-size: 1.6rem;
+    letter-spacing: 0.08em;
+    color: var(--white);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--red); }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--grey);
+    text-decoration: none;
+    transition: color 0.2s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute; bottom: -4px; left: 0; right: 0; height: 1px;
+    background: var(--red);
+    transform: scaleX(0);
+    transition: transform 0.2s;
+  }
+  .nav-links a:hover { color: var(--white); }
+  .nav-links a:hover::after { transform: scaleX(1); }
+  .nav-cta {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--red);
+    text-decoration: none;
+    border: 1px solid var(--red);
+    padding: 0.5rem 1.2rem;
+    transition: background 0.2s, color 0.2s;
+  }
+  .nav-cta:hover { background: var(--red); color: var(--black); }
+
+  /* ─── HERO ─── */
+  #hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 8rem 4rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Animated waveform background */
+  .wave-bg {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 260px;
+    display: flex; align-items: flex-end; justify-content: center;
+    gap: 3px;
+    padding: 0 2rem;
+    opacity: 0.12;
+  }
+  .wave-bar {
+    width: 3px;
+    background: var(--red);
+    border-radius: 2px 2px 0 0;
+    animation: wavePulse 1.2s ease-in-out infinite alternate;
+  }
+
+  @keyframes wavePulse {
+    0% { transform: scaleY(0.15); }
+    100% { transform: scaleY(1); }
+  }
+
+  /* Diagonal red accent line */
+  #hero::after {
+    content: '';
+    position: absolute;
+    right: -100px; top: 20%; 
+    width: 3px; height: 55%;
+    background: linear-gradient(to bottom, transparent, var(--red), transparent);
+    transform: rotate(12deg);
+    opacity: 0.6;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.25em;
+    color: var(--red);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+  }
+
+  .hero-title {
+    font-family: var(--display);
+    font-size: clamp(5rem, 13vw, 14rem);
+    line-height: 0.88;
+    letter-spacing: -0.01em;
+    color: var(--white);
+    opacity: 0;
+    animation: fadeUp 0.9s 0.4s forwards;
+  }
+  .hero-title .accent { color: var(--red); }
+
+  .hero-sub {
+    font-family: var(--body);
+    font-size: clamp(1rem, 2vw, 1.3rem);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--grey);
+    margin-top: 1.5rem;
+    max-width: 480px;
+    line-height: 1.6;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.6s forwards;
+  }
+
+  .hero-actions {
+    display: flex; gap: 1.2rem; align-items: center;
+    margin-top: 3rem;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.8s forwards;
+  }
+  .btn-primary {
+    font-family: var(--display);
+    font-size: 1.1rem;
+    letter-spacing: 0.1em;
+    background: var(--red);
+    color: var(--black);
+    padding: 0.9rem 2.5rem;
+    text-decoration: none;
+    display: inline-block;
+    transition: background 0.2s, transform 0.2s;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  }
+  .btn-primary:hover { background: #ff1a25; transform: translateY(-2px); }
+  .btn-ghost {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--grey);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 2px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .btn-ghost:hover { color: var(--white); border-color: var(--white); }
+
+  /* ─── SECTION SHARED ─── */
+  section { padding: 7rem 4rem; }
+  .section-label {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .section-label::after {
+    content: '';
+    height: 1px; width: 60px;
+    background: var(--red-dim);
+    display: block;
+  }
+  .section-title {
+    font-family: var(--display);
+    font-size: clamp(3rem, 6vw, 6rem);
+    line-height: 0.92;
+    color: var(--white);
+    margin-bottom: 3rem;
+  }
+
+  /* Divider */
+  .divider {
+    width: 100%; height: 1px;
+    background: linear-gradient(to right, transparent, var(--border), transparent);
+    margin: 0 4rem;
+    width: calc(100% - 8rem);
+  }
+
+  /* ─── ABOUT STRIP ─── */
+  #about {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 6rem; align-items: center;
+    background: var(--panel);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .about-visual {
+    position: relative;
+    height: 420px;
+  }
+  .eq-display {
+    width: 100%; height: 100%;
+    display: flex; align-items: flex-end;
+    gap: 6px;
+    padding: 2rem;
+    background: var(--dark);
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .eq-display::before {
+    content: 'SPECTRUM ANALYZER';
+    position: absolute; top: 1rem; left: 1.5rem;
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: var(--red);
+  }
+  .eq-bar {
+    flex: 1;
+    background: linear-gradient(to top, var(--red), var(--red-dim), rgba(232,0,13,0.2));
+    border-radius: 1px 1px 0 0;
+    min-height: 8px;
+    animation: eqAnim 0.6s ease-in-out infinite alternate;
+  }
+  @keyframes eqAnim {
+    0% { transform: scaleY(0.2); }
+    100% { transform: scaleY(1); }
+  }
+  .grid-overlay {
+    position: absolute; inset: 0;
+    background-image: 
+      linear-gradient(rgba(232,0,13,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(232,0,13,0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+  .about-text p {
+    font-size: 1.05rem; font-weight: 300; line-height: 1.8;
+    color: #bbb; margin-bottom: 1.5rem;
+  }
+  .about-text p strong { color: var(--white); font-weight: 600; }
+  .stat-row { display: flex; gap: 3rem; margin-top: 2.5rem; }
+  .stat { text-align: left; }
+  .stat-num {
+    font-family: var(--display);
+    font-size: 3.5rem;
+    color: var(--red);
+    line-height: 1;
+  }
+  .stat-desc {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--grey);
+    margin-top: 0.3rem;
+  }
+
+  /* ─── SERVICES / RATES ─── */
+  #rates { background: var(--black); }
+  .rates-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 3rem;
+  }
+  .rate-card {
+    background: var(--dark);
+    padding: 2.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+  }
+  .rate-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--red);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s;
+  }
+  .rate-card:hover { background: #1a1a1a; }
+  .rate-card:hover::before { transform: scaleX(1); }
+  .rate-card.featured { background: var(--panel); }
+  .rate-card.featured::before { transform: scaleX(1); }
+  .rate-tag {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 1.2rem;
+    display: block;
+  }
+  .rate-name {
+    font-family: var(--display);
+    font-size: 2.2rem;
+    letter-spacing: 0.03em;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+  .rate-price {
+    font-family: var(--display);
+    font-size: 3.8rem;
+    color: var(--red);
+    line-height: 1;
+    margin-bottom: 0.4rem;
+  }
+  .rate-price span {
+    font-size: 1.4rem;
+    color: var(--grey);
+    font-family: var(--mono);
+  }
+  .rate-desc {
+    font-size: 0.85rem;
+    font-weight: 300;
+    color: var(--grey);
+    line-height: 1.6;
+    margin-bottom: 1.8rem;
+    border-top: 1px solid var(--border);
+    padding-top: 1.2rem;
+    margin-top: 1rem;
+  }
+  .rate-features { list-style: none; }
+  .rate-features li {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    color: #aaa;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+  .rate-features li::before { content: '//'; color: var(--red-dim); }
+  .rate-btn {
+    display: block;
+    text-align: center;
+    margin-top: 2rem;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--white);
+    border: 1px solid var(--border);
+    padding: 0.8rem;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+  }
+  .rate-btn:hover, .rate-card.featured .rate-btn {
+    border-color: var(--red);
+    color: var(--red);
+  }
+  .rate-card.featured .rate-btn:hover {
+    background: var(--red);
+    color: var(--black);
+  }
+
+  /* ─── PORTFOLIO ─── */
+  #portfolio { background: var(--panel); border-top: 1px solid var(--border); }
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: var(--border);
+    margin-top: 3rem;
+  }
+  .portfolio-item {
+    background: var(--dark);
+    padding: 2rem;
+    display: flex; align-items: center; gap: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  .portfolio-item:hover { background: #181818; }
+  .play-btn {
+    width: 52px; height: 52px; flex-shrink: 0;
+    border: 1px solid var(--red);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--red);
+    font-size: 1.2rem;
+    transition: background 0.2s, color 0.2s;
+    position: relative;
+    z-index: 1;
+  }
+  .portfolio-item:hover .play-btn { background: var(--red); color: var(--black); }
+  .portfolio-info { flex: 1; }
+  .portfolio-track {
+    font-family: var(--display);
+    font-size: 1.5rem;
+    letter-spacing: 0.04em;
+    color: var(--white);
+  }
+  .portfolio-artist {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--grey);
+    margin-top: 0.2rem;
+  }
+  .portfolio-service {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--red-dim);
+    margin-top: 0.6rem;
+  }
+  .portfolio-mini-wave {
+    display: flex; align-items: center; gap: 2px; height: 28px;
+    opacity: 0.5;
+  }
+  .mini-bar {
+    width: 2px;
+    background: var(--red);
+    border-radius: 1px;
+    animation: eqAnim 0.5s ease-in-out infinite alternate;
+  }
+
+  /* ─── CLIENTS ─── */
+  #clients { background: var(--black); border-top: 1px solid var(--border); }
+  .clients-marquee {
+    overflow: hidden;
+    margin-top: 3rem;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 1.5rem 0;
+  }
+  .marquee-track {
+    display: flex; gap: 4rem; align-items: center;
+    animation: marquee 20s linear infinite;
+    width: max-content;
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  .client-name {
+    font-family: var(--display);
+    font-size: 1.8rem;
+    letter-spacing: 0.08em;
+    color: var(--border);
+    white-space: nowrap;
+    transition: color 0.3s;
+  }
+  .client-name:hover { color: var(--grey); }
+  .client-sep {
+    color: var(--red-dim);
+    font-family: var(--mono);
+    font-size: 0.8rem;
+  }
+
+  .testimonials {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 4rem;
+  }
+  .testimonial {
+    background: var(--dark);
+    padding: 2.5rem;
+    position: relative;
+  }
+  .testimonial::before {
+    content: '"';
+    font-family: var(--display);
+    font-size: 6rem;
+    color: var(--red-dim);
+    position: absolute;
+    top: 0.5rem; left: 1.5rem;
+    line-height: 1;
+    opacity: 0.4;
+  }
+  .testimonial-text {
+    font-size: 0.9rem;
+    font-weight: 300;
+    font-style: italic;
+    color: #bbb;
+    line-height: 1.7;
+    margin-top: 2rem;
+    margin-bottom: 1.5rem;
+  }
+  .testimonial-author {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--red);
+  }
+  .testimonial-role {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    color: var(--grey);
+    margin-top: 0.2rem;
+  }
+
+  /* ─── CONTACT ─── */
+  #contact { background: var(--panel); border-top: 1px solid var(--border); }
+  .contact-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    margin-top: 3rem;
+  }
+  .contact-info { display: flex; flex-direction: column; gap: 2rem; }
+  .contact-block {
+    border-left: 2px solid var(--red);
+    padding-left: 1.5rem;
+  }
+  .contact-block-label {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 0.4rem;
+  }
+  .contact-block-value {
+    font-family: var(--body);
+    font-size: 1rem;
+    font-weight: 300;
+    color: var(--white);
+  }
+  .contact-block-value a { color: var(--white); text-decoration: none; }
+  .contact-block-value a:hover { color: var(--red); }
+
+  .contact-form { display: flex; flex-direction: column; gap: 1rem; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+  .form-group label {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--grey);
+  }
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    background: var(--dark);
+    border: 1px solid var(--border);
+    color: var(--white);
+    font-family: var(--body);
+    font-size: 0.9rem;
+    padding: 0.8rem 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+    resize: vertical;
+    appearance: none;
+  }
+  .form-group input:focus,
+  .form-group textarea:focus,
+  .form-group select:focus { border-color: var(--red); }
+  .form-group select option { background: var(--dark); }
+  .form-submit {
+    font-family: var(--display);
+    font-size: 1.3rem;
+    letter-spacing: 0.1em;
+    background: var(--red);
+    color: var(--black);
+    border: none;
+    padding: 1rem 2.5rem;
+    cursor: none;
+    transition: background 0.2s, transform 0.2s;
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+    align-self: flex-start;
+  }
+  .form-submit:hover { background: #ff1a25; transform: translateY(-2px); }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--black);
+    border-top: 1px solid var(--border);
+    padding: 3rem 4rem;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .footer-logo {
+    font-family: var(--display);
+    font-size: 1.8rem;
+    letter-spacing: 0.08em;
+    color: var(--white);
+  }
+  .footer-logo span { color: var(--red); }
+  .footer-copy {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.15em;
+    color: var(--grey);
+  }
+  .social-links { display: flex; gap: 1.5rem; }
+  .social-links a {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--grey);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .social-links a:hover { color: var(--red); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Reveal on scroll */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  /* Red corner accent */
+  .corner-accent {
+    position: absolute;
+    top: 0; right: 0;
+    width: 80px; height: 80px;
+    border-top: 2px solid var(--red);
+    border-right: 2px solid var(--red);
+    opacity: 0.4;
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    section { padding: 5rem 1.5rem; }
+    #about { grid-template-columns: 1fr; gap: 3rem; }
+    .rates-grid { grid-template-columns: 1fr; }
+    .portfolio-grid { grid-template-columns: 1fr; }
+    .testimonials { grid-template-columns: 1fr; }
+    .contact-layout { grid-template-columns: 1fr; gap: 3rem; }
+    .form-row { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 1.5rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#hero" class="nav-logo">MIXED BY <span>LUNGSTA</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#rates">Rates</a></li>
+    <li><a href="#portfolio">Portfolio</a></li>
+    <li><a href="#clients">Clients</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Book Now</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="wave-bg" id="waveBg"></div>
+  <div class="hero-eyebrow">// Professional Mixing & Mastering Studio</div>
+  <h1 class="hero-title">
+    MIXED<br>BY <span class="accent">LUNGSTA</span>
+  </h1>
+  <p class="hero-sub">Where raw tracks become radio-ready records. All genres. Every sound. One standard — excellence.</p>
+  <div class="hero-actions">
+    <a href="#contact" class="btn-primary">Start a Project</a>
+    <a href="#portfolio" class="btn-ghost">Hear the Work ↓</a>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-visual reveal">
+    <div class="eq-display" id="eqDisplay">
+      <div class="grid-overlay"></div>
+    </div>
+  </div>
+  <div class="about-text reveal">
+    <div class="section-label">About</div>
+    <h2 class="section-title">SOUND IS<br>AN ART</h2>
+    <p>Lungsta is a <strong>professional mixing and mastering engineer</strong> with a relentless ear for detail. Every track that passes through the studio is treated like a masterpiece — because that's what it is.</p>
+    <p>From underground rap to polished R&B, electronic bangers to soulful ballads — the studio handles every genre with the same precision and passion.</p>
+    <div class="stat-row">
+      <div class="stat">
+        <div class="stat-num">500+</div>
+        <div class="stat-desc">Tracks Mixed</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">100+</div>
+        <div class="stat-desc">Artists Served</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">48h</div>
+        <div class="stat-desc">Avg Turnaround</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- RATES -->
+<section id="rates">
+  <div class="section-label">Services & Pricing</div>
+  <h2 class="section-title">INVEST IN<br>YOUR SOUND</h2>
+  <div class="rates-grid reveal">
+
+    <div class="rate-card">
+      <div class="corner-accent"></div>
+      <span class="rate-tag">01 // Essentials</span>
+      <div class="rate-name">Mixing</div>
+      <div class="rate-price">$80<span>/track</span></div>
+      <p class="rate-desc">Professional mixing for independent artists. Balanced, punchy, and ready for streaming.</p>
+      <ul class="rate-features">
+        <li>Up to 40 stems</li>
+        <li>EQ & compression</li>
+        <li>FX & spatial processing</li>
+        <li>2 rounds of revisions</li>
+        <li>WAV + MP3 delivery</li>
+      </ul>
+      <a href="#contact" class="rate-btn">Get Started</a>
+    </div>
+
+    <div class="rate-card featured">
+      <div class="corner-accent"></div>
+      <span class="rate-tag">02 // Most Popular</span>
+      <div class="rate-name">Mix + Master</div>
+      <div class="rate-price">$130<span>/track</span></div>
+      <p class="rate-desc">The full treatment. Your track goes from raw to release-ready in one seamless package.</p>
+      <ul class="rate-features">
+        <li>Everything in Mixing</li>
+        <li>Professional mastering</li>
+        <li>Loudness normalization</li>
+        <li>Streaming platform ready</li>
+        <li>3 rounds of revisions</li>
+        <li>Priority turnaround (24h)</li>
+      </ul>
+      <a href="#contact" class="rate-btn">Book This</a>
+    </div>
+
+    <div class="rate-card">
+      <div class="corner-accent"></div>
+      <span class="rate-tag">03 // Standalone</span>
+      <div class="rate-name">Mastering</div>
+      <div class="rate-price">$50<span>/track</span></div>
+      <p class="rate-desc">Already have a mix? Let Lungsta master it to industry standard loudness and clarity.</p>
+      <ul class="rate-features">
+        <li>Stereo mastering</li>
+        <li>Loudness targeting (LUFS)</li>
+        <li>Streaming optimization</li>
+        <li>2 rounds of revisions</li>
+        <li>WAV + MP3 delivery</li>
+      </ul>
+      <a href="#contact" class="rate-btn">Get Started</a>
+    </div>
+
+  </div>
+
+  <!-- EP/Album pricing row -->
+  <div class="rates-grid reveal" style="margin-top:1px;">
+    <div class="rate-card" style="grid-column: span 1;">
+      <span class="rate-tag">04 // Bundle</span>
+      <div class="rate-name">EP Package</div>
+      <div class="rate-price">$350<span>/EP (up to 6 tracks)</span></div>
+      <p class="rate-desc">Full mix & master for a complete EP. Save on per-track pricing and move faster.</p>
+      <ul class="rate-features">
+        <li>Up to 6 tracks</li>
+        <li>Full mix & master</li>
+        <li>Cohesive sound design</li>
+        <li>Dedicated session support</li>
+      </ul>
+      <a href="#contact" class="rate-btn">Get This Deal</a>
+    </div>
+    <div class="rate-card" style="grid-column: span 1;">
+      <span class="rate-tag">05 // Bundle</span>
+      <div class="rate-name">Album Package</div>
+      <div class="rate-price">$600<span>/album (up to 15 tracks)</span></div>
+      <p class="rate-desc">The full album treatment. Best value for artists ready to drop a full-length project.</p>
+      <ul class="rate-features">
+        <li>Up to 15 tracks</li>
+        <li>Full mix & master</li>
+        <li>Album continuity review</li>
+        <li>Priority support & comms</li>
+      </ul>
+      <a href="#contact" class="rate-btn">Get This Deal</a>
+    </div>
+    <div class="rate-card" style="grid-column: span 1;">
+      <span class="rate-tag">06 // Custom</span>
+      <div class="rate-name">Custom Quote</div>
+      <div class="rate-price" style="font-size:2.2rem;">Let's Talk</div>
+      <p class="rate-desc">Need something unique? Podcast audio, film scoring, stem mastering — reach out and we'll make it work.</p>
+      <ul class="rate-features">
+        <li>Podcast & voiceover</li>
+        <li>Film / sync audio</li>
+        <li>Stem mastering</li>
+        <li>Rush delivery available</li>
+      </ul>
+      <a href="#contact" class="rate-btn">Get a Quote</a>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PORTFOLIO -->
+<section id="portfolio">
+  <div class="section-label">Portfolio</div>
+  <h2 class="section-title">HEAR THE<br>DIFFERENCE</h2>
+  <div class="portfolio-grid reveal">
+
+    <div class="portfolio-item">
+      <div class="play-btn">▶</div>
+      <div class="portfolio-info">
+        <div class="portfolio-track">Night Frequency</div>
+        <div class="portfolio-artist">// Artist: Kxng Dre</div>
+        <div class="portfolio-service">Mix & Master · Hip-Hop</div>
+      </div>
+      <div class="portfolio-mini-wave" id="wave1"></div>
+    </div>
+
+    <div class="portfolio-item">
+      <div class="play-btn">▶</div>
+      <div class="portfolio-info">
+        <div class="portfolio-track">Still Waters</div>
+        <div class="portfolio-artist">// Artist: Zara Lyric</div>
+        <div class="portfolio-service">Mix & Master · R&B / Soul</div>
+      </div>
+      <div class="portfolio-mini-wave" id="wave2"></div>
+    </div>
+
+    <div class="portfolio-item">
+      <div class="play-btn">▶</div>
+      <div class="portfolio-info">
+        <div class="portfolio-track">Voltage Drop</div>
+        <div class="portfolio-artist">// Artist: NXVE</div>
+        <div class="portfolio-service">Mastering · Electronic</div>
+      </div>
+      <div class="portfolio-mini-wave" id="wave3"></div>
+    </div>
+
+    <div class="portfolio-item">
+      <div class="play-btn">▶</div>
+      <div class="portfolio-info">
+        <div class="portfolio-track">Paper Trails</div>
+        <div class="portfolio-artist">// Artist: Jae Milli</div>
+        <div class="portfolio-service">Mix & Master · Trap</div>
+      </div>
+      <div class="portfolio-mini-wave" id="wave4"></div>
+    </div>
+
+    <div class="portfolio-item">
+      <div class="play-btn">▶</div>
+      <div class="portfolio-info">
+        <div class="portfolio-track">Midnight Colour</div>
+        <div class="portfolio-artist">// Artist: Seraph</div>
+        <div class="portfolio-service">Mixing · Indie / Alt</div>
+      </div>
+      <div class="portfolio-mini-wave" id="wave5"></div>
+    </div>
+
+    <div class="portfolio-item">
+      <div class="play-btn">▶</div>
+      <div class="portfolio-info">
+        <div class="portfolio-track">Chosen Few</div>
+        <div class="portfolio-artist">// Artist: TK The Mogul</div>
+        <div class="portfolio-service">Mix & Master · Afrobeats</div>
+      </div>
+      <div class="portfolio-mini-wave" id="wave6"></div>
+    </div>
+
+  </div>
+  <p style="margin-top:2rem; font-family:var(--mono); font-size:0.7rem; color:var(--grey); letter-spacing:0.1em; text-align:center;">
+    * Portfolio samples are placeholder. Contact to hear real work.
+  </p>
+</section>
+
+<div class="divider"></div>
+
+<!-- CLIENTS -->
+<section id="clients">
+  <div class="section-label">Clientele</div>
+  <h2 class="section-title">TRUSTED BY<br>THE CULTURE</h2>
+
+  <div class="clients-marquee">
+    <div class="marquee-track" id="marquee">
+      <span class="client-name">Kxng Dre</span><span class="client-sep">×</span>
+      <span class="client-name">Zara Lyric</span><span class="client-sep">×</span>
+      <span class="client-name">NXVE</span><span class="client-sep">×</span>
+      <span class="client-name">Jae Milli</span><span class="client-sep">×</span>
+      <span class="client-name">Seraph</span><span class="client-sep">×</span>
+      <span class="client-name">TK The Mogul</span><span class="client-sep">×</span>
+      <span class="client-name">Nayeli</span><span class="client-sep">×</span>
+      <span class="client-name">Blac Remy</span><span class="client-sep">×</span>
+      <span class="client-name">Crypt</span><span class="client-sep">×</span>
+      <span class="client-name">Young Niche</span><span class="client-sep">×</span>
+      <!-- Duplicate for seamless loop -->
+      <span class="client-name">Kxng Dre</span><span class="client-sep">×</span>
+      <span class="client-name">Zara Lyric</span><span class="client-sep">×</span>
+      <span class="client-name">NXVE</span><span class="client-sep">×</span>
+      <span class="client-name">Jae Milli</span><span class="client-sep">×</span>
+      <span class="client-name">Seraph</span><span class="client-sep">×</span>
+      <span class="client-name">TK The Mogul</span><span class="client-sep">×</span>
+      <span class="client-name">Nayeli</span><span class="client-sep">×</span>
+      <span class="client-name">Blac Remy</span><span class="client-sep">×</span>
+      <span class="client-name">Crypt</span><span class="client-sep">×</span>
+      <span class="client-name">Young Niche</span><span class="client-sep">×</span>
+    </div>
+  </div>
+
+  <div class="testimonials reveal" style="margin-top:4rem;">
+    <div class="testimonial">
+      <p class="testimonial-text">Lungsta turned my rough demo into something I couldn't believe was mine. The mix was clean, punchy, and hit different on every speaker I played it on.</p>
+      <div class="testimonial-author">Kxng Dre</div>
+      <div class="testimonial-role">// Hip-Hop Artist</div>
+    </div>
+    <div class="testimonial">
+      <p class="testimonial-text">The best decision I made for my EP was sending it to Lungsta. Every single track sounds cohesive, professional, and just right. My listeners noticed immediately.</p>
+      <div class="testimonial-author">Zara Lyric</div>
+      <div class="testimonial-role">// R&B Singer-Songwriter</div>
+    </div>
+    <div class="testimonial">
+      <p class="testimonial-text">Fast turnaround, great communication, and the master absolutely slaps on streaming. I'm not going anywhere else. This is my go-to engineer.</p>
+      <div class="testimonial-author">TK The Mogul</div>
+      <div class="testimonial-role">// Afrobeats Artist & Producer</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-label">Get In Touch</div>
+  <h2 class="section-title">LET'S BUILD<br>SOMETHING</h2>
+  <div class="contact-layout">
+
+    <div class="contact-info reveal">
+      <div class="contact-block">
+        <div class="contact-block-label">// Email</div>
+        <div class="contact-block-value"><a href="mailto:mixedbylungsta@email.com">mixedbylungsta@email.com</a></div>
+      </div>
+      <div class="contact-block">
+        <div class="contact-block-label">// Instagram</div>
+        <div class="contact-block-value"><a href="#">@mixedbylungsta</a></div>
+      </div>
+      <div class="contact-block">
+        <div class="contact-block-label">// Turnaround</div>
+        <div class="contact-block-value">48 hours standard · 24 hours rush</div>
+      </div>
+      <div class="contact-block">
+        <div class="contact-block-label">// File Delivery</div>
+        <div class="contact-block-value">Google Drive · WeTransfer · Dropbox</div>
+      </div>
+      <div class="contact-block">
+        <div class="contact-block-label">// Payment</div>
+        <div class="contact-block-value">PayPal · CashApp · Venmo · Zelle</div>
+      </div>
+
+      <!-- Decorative EQ bars -->
+      <div style="display:flex; align-items:flex-end; gap:4px; height:60px; opacity:0.3; margin-top:1rem;">
+        <div id="contactEq"></div>
+      </div>
+    </div>
+
+    <div class="reveal">
+      <form class="contact-form" onsubmit="handleSubmit(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Artist / Stage Name</label>
+            <input type="text" placeholder="Your name" required/>
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" placeholder="your@email.com" required/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Service Needed</label>
+          <select>
+            <option value="">Select a service…</option>
+            <option>Mixing – $80/track</option>
+            <option>Mastering – $50/track</option>
+            <option>Mix + Master – $130/track</option>
+            <option>EP Package – $350</option>
+            <option>Album Package – $600</option>
+            <option>Custom Quote</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Genre</label>
+          <input type="text" placeholder="Hip-Hop, R&B, Pop, EDM…"/>
+        </div>
+        <div class="form-group">
+          <label>Project Details</label>
+          <textarea rows="5" placeholder="Tell me about your project — number of tracks, reference tracks, deadline, vision…"></textarea>
+        </div>
+        <button type="submit" class="form-submit">Send Message →</button>
+      </form>
+      <div id="form-success" style="display:none; margin-top:1.5rem; font-family:var(--mono); font-size:0.75rem; letter-spacing:0.15em; color:var(--red);">
+        // MESSAGE SENT. I'll be in touch within 24 hours.
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">MIXED BY <span>LUNGSTA</span></div>
+  <div class="footer-copy">© 2024 MIXED BY LUNGSTA · ALL RIGHTS RESERVED</div>
+  <div class="social-links">
+    <a href="#">Instagram</a>
+    <a href="#">SoundCloud</a>
+    <a href="#">Twitter</a>
+  </div>
+</footer>
+
+<script>
+// Custom cursor
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+  setTimeout(() => {
+    ring.style.left = e.clientX + 'px';
+    ring.style.top = e.clientY + 'px';
+  }, 60);
+});
+
+// Nav scroll
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 50);
+});
+
+// Hero wave bars
+const waveBg = document.getElementById('waveBg');
+const numBars = Math.floor(window.innerWidth / 7);
+for (let i = 0; i < numBars; i++) {
+  const bar = document.createElement('div');
+  bar.className = 'wave-bar';
+  const h = 20 + Math.random() * 80;
+  bar.style.height = h + '%';
+  bar.style.animationDelay = (Math.random() * 2) + 's';
+  bar.style.animationDuration = (0.7 + Math.random() * 1.2) + 's';
+  waveBg.appendChild(bar);
+}
+
+// EQ display
+const eqDisplay = document.getElementById('eqDisplay');
+for (let i = 0; i < 32; i++) {
+  const bar = document.createElement('div');
+  bar.className = 'eq-bar';
+  bar.style.height = (15 + Math.random() * 85) + '%';
+  bar.style.animationDelay = (Math.random() * 1.5) + 's';
+  bar.style.animationDuration = (0.4 + Math.random() * 0.8) + 's';
+  eqDisplay.appendChild(bar);
+}
+
+// Mini waveforms in portfolio
+['wave1','wave2','wave3','wave4','wave5','wave6'].forEach(id => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  for (let i = 0; i < 18; i++) {
+    const bar = document.createElement('div');
+    bar.className = 'mini-bar';
+    bar.style.height = (8 + Math.random() * 20) + 'px';
+    bar.style.animationDelay = (Math.random() * 1.5) + 's';
+    bar.style.animationDuration = (0.3 + Math.random() * 0.6) + 's';
+    el.appendChild(bar);
+  }
+});
+
+// Scroll reveal
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+reveals.forEach(r => observer.observe(r));
+
+// Form submit
+function handleSubmit(e) {
+  e.preventDefault();
+  document.getElementById('form-success').style.display = 'block';
+  e.target.style.opacity = '0.4';
+  e.target.style.pointerEvents = 'none';
+}
+</script>
+</body>
+</html>
